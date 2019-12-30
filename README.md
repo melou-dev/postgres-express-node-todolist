@@ -114,3 +114,33 @@ dans package.json
     "test": "echo \"Error: no test specified\" && exit 1"
   },
 ```
+
+et exécuter avec la commande `npm run start:dev`.
+
+## Sequelize.
+
+Node.js **Object Relational Mapping** pour notre base de donnée _postgreSQL_.
+
+Installer **Sequelize** `npm install -g sequelize-cli`.
+Créer un fichier `.sequelizerc`
+
+dans le fichier, indiquer les chemins
+
+```
+const path = require('path');
+
+module.exports = {
+  "config": path.resolve('./config', 'config.json'),
+  "models-path": path.resolve('./models'),
+  "seeders-path": path.resolve('./seeders'),
+  "migrations-path": path.resolve('./migrations')
+};
+```
+
+Le fichier **config.json** contiendra les paramètres de configuration d'application,
+le dossier **migrations** pour les migrations de notre application,
+le dossier **models** pour les modèles d'application,
+le dossier **seeders** pour généralement des données de départ.
+
+puis exécuter sequelize `npm install --save sequelize pg pg-hstore` et `sequelize init`.
+Les dossiers et fichier sont alors créés.
