@@ -81,3 +81,36 @@ app.listen(port);
 ```
 
 **Morgan** est un autre middleware d'enregistreur de requêtes HTTP pour Node.js, comme journal de bord automatisé.
+
+### Lancer le serveur à chaque changement avec Nodemon.
+
+créer un dossier **bin** et dans celui-ci un fichier **www.js**
+
+dans app.js supprimer `const port = 4000;` et `app.listen(port);` qui seront maintenant dans bin.
+dans app.js ajouter l'export `module.exports = app;`
+
+dans le fichier www.js ajouter le code :
+
+```
+// This will be our application entry. We'll setup our server here.
+const http = require("http");
+const app = require("./app"); // The express app we just created
+
+const port = parseInt(process.env.PORT, 10) || 4000;
+app.set("port", port);
+
+const server = http.createServer(app);
+server.listen(port);
+```
+
+Puis installer Nodemon `npm i -D nodemon`
+et
+
+dans package.json
+
+```
+"scripts": {
+    "start:dev": "nodemon ./bin/www",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+```
