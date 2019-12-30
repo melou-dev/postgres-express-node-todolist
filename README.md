@@ -45,7 +45,7 @@ puis `npm i -S express body-parser`
 **-S** - pour **--Save** cad sauvegarder express et body-parser dans les dépendances de package.json.
 **body-parser** pour analyser et utiliser les paramètres du frontend dans le backend.
 
-### Initialisation d'Express
+### Initialisation d'Express et middleware Morgan & body-parser.
 
 touch app.js
 
@@ -55,6 +55,7 @@ Création de la dépendance à l'api express
 
 ```
 const express = require("express");
+const logger = require("morgan");
 const bodyParser = require('body-parser');
 ```
 
@@ -78,3 +79,5 @@ app.get('*', (req, res) => res.status(200).send({
 
 app.listen(port);
 ```
+
+**Morgan** est un autre middleware d'enregistreur de requêtes HTTP pour Node.js, comme journal de bord automatisé.
