@@ -228,7 +228,7 @@ la table items sous Id, la valeur 1 s'est créé, sous item la valeur bonjour.
   "development": {
     "username": "todolistchristmas",
     "password": "lavieestbelle",
-    "database": "todolistchristmas_development",
+    "database": "todolistchristmas",
     "host": "127.0.0.1",
     "dialect": "postgres",
     "operatorsAliases": false
@@ -236,7 +236,7 @@ la table items sous Id, la valeur 1 s'est créé, sous item la valeur bonjour.
   "test": {
     "username": "todolistchristmas",
     "password": "lavieestbelle",
-    "database": "todolistchristmas_test",
+    "database": "todolistchristmas",
     "host": "127.0.0.1",
     "dialect": "postgres",
     "operatorsAliases": false
@@ -244,7 +244,7 @@ la table items sous Id, la valeur 1 s'est créé, sous item la valeur bonjour.
   "production": {
     "username": "todolistchristmas",
     "password": "lavieestbelle",
-    "database": "todolistchristmas_production",
+    "database": "todolistchristmas",
     "host": "127.0.0.1",
     "dialect": "postgres",
     "operatorsAliases": false
@@ -278,4 +278,95 @@ db.authenticate()
   .catch(err => {
     console.error("Unable to connect to the database:", err);
   });
+```
+
+## Générer des modèles.
+
+Dans "Todo" il peux y avoir plusieurs "TodoItems", à l'inverse, un "TodoItem" est rattaché à un seul "Todo".
+On appelle cette relation One-to-Many.
+
+dans le terminal
+
+`sequelize model:create --name Todo --attributes title:string`
+
+dans les dossiers **models** et **migrations** des fichiers "todo.js" et "20200103083401-create-todo.js" sont alors créés.
+
+puis
+
+`sequelize model:create --name TodoItem --attributes content:string,complete:boolean`
+
+dans les dossiers **models** et **migrations** des fichiers "todoitem.js" et "20200103084953-create-todo-item.js" sont alors créés.
+
+par convention, nous modifions les nom des fichers en mettant la 1ère lettre en majuscule dans model "Todo.js" et "TodoItem.js".
+
+puis dans todo.js
+on associe la Todo à ses "TodoItems" en codant :
+
+dans la fonction `const Todo = sequelize.define("Todo", {}`
+pour indiquer qu'une valeur dans "title" est obligatoire
+
+```
+title: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+  });
+```
+
+`allowNull: false` à rajouter aussi dans la migration.
+
+et dans la fonction `Todo.associate = function(models) {`
+
+```
+TodoItem.belongsTo(models.Todo, {
+      foreignKey: "todoId",
+      onDelete: "CASCADE"
+    });
+  };
+
+  return TodoItem;
+```
+
+puis dans todoitem.js
+
+dans la fonction `const TodoItem = sequelize.define("TodoItem", {}`
+pour indiquer qu'une valeur dans "content" est obligatoire et "complete" aura une valeur par défault.
+
+```
+content: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+complete: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+  });
+```
+
+`allowNull : false` et `defaultValue: false` à rajouter aussi dans la migration.
+
+et dans la fonction `TodoItem.associate = function(models) {}`
+
+```
+Todo.hasMany(models.TodoItem, {
+      foreignKey: 'todoId',
+      as: 'todoItems',
+    });
+  };
+
+  return Todo;
+```
+
+dans la migration de TodoItem, ajouter aussi la relation car sequelize n'a pas crée de todoId.
+
+```
+todoId: {
+        type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
+        references: {
+          model: 'Todos',
+          key: 'id',
+          as: 'todoId',
+        },
 ```
