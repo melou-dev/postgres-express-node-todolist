@@ -2,7 +2,7 @@
   "development": {
     "username": "todolistchristmas",
     "password": "lavieestbelle",
-    "database": "todolistchristmas_development",
+    "database": "todolistchristmas",
     "host": "127.0.0.1",
     "dialect": "postgres",
     "operatorsAliases": false
@@ -10,7 +10,7 @@
   "test": {
     "username": "todolistchristmas",
     "password": "lavieestbelle",
-    "database": "todolistchristmas_test",
+    "database": "todolistchristmas",
     "host": "127.0.0.1",
     "dialect": "postgres",
     "operatorsAliases": false
@@ -18,7 +18,7 @@
   "production": {
     "username": "todolistchristmas",
     "password": "lavieestbelle",
-    "database": "todolistchristmas_production",
+    "database": "todolistchristmas",
     "host": "127.0.0.1",
     "dialect": "postgres",
     "operatorsAliases": false
