@@ -115,11 +115,11 @@ dans package.json
   },
 ```
 
-et exécuter avec la commande `npm run start:dev`.
+et exécuter avec la commande `npm run start:dev`. comme dans le script de package.json.
 
 ## Sequelize.
 
-Node.js **Object Relational Mapping** pour notre base de donnée _postgreSQL_.
+Appelé **sequelize** nous l'installons en tant que Node.js **Object Relational Mapping** (ORM) pour notre base de donnée _postgreSQL_.
 
 Installer **Sequelize** `npm install -g sequelize-cli`.
 Créer un fichier `.sequelizerc`
@@ -144,3 +144,138 @@ le dossier **seeders** pour généralement des données de départ.
 
 puis exécuter sequelize `npm install --save sequelize pg pg-hstore` et `sequelize init`.
 Les dossiers et fichier sont alors créés.
+
+## La base de données
+
+### Création de la base de données.
+
+Dans le terminal :
+
+```
+pgcli
+\l
+```
+
+```
+CREATE USER todolistchristmas;
+\du
+```
+
+```
+CREATE DATABASE todolchristmas;
+\l
+```
+
+```
+ALTER DATABASE todolistchristmas OWNER TO todolistchristmas;
+
+ALTER USER todolistchristmas WITH PASSWORD 'lavieestbelle';
+\q
+```
+
+```
+pgcli -U todolistchristmas;
+\conninfo
+```
+
+### Création d'une table.
+
+dans le terminal dans la base de données **todolistchristmas** :
+
+```
+CREATE TABLE Items (
+ id bigserial not null primary key,
+ item varchar(200));
+```
+
+`select * from "items";`
+la table items apparaît en colonne id et item.
+
+### Création d'une donnée.
+
+`INSERT INTO Items(item) VALUES('bonjour');`
+
+`select * from "items";`
+la table items sous Id, la valeur 1 s'est créé, sous item la valeur bonjour.
+
+### ajouter des colonnes.
+
+```
+ALTER TABLE items ADD COLUMN "createdAt" timestamp;
+You're about to run a destructive command.
+Do you want to proceed? (y/n): y
+Your call!
+ALTER TABLE
+Time: 0.008s
+```
+
+```
+ALTER TABLE items ADD COLUMN "updatedAt" timestamp;
+You're about to run a destructive command.
+Do you want to proceed? (y/n): y
+Your call!
+ALTER TABLE
+Time: 0.004s
+```
+
+`select * from "items";`
+la table items sous Id, la valeur 1 s'est créé, sous item la valeur bonjour.
+
+## Mettre à jour les informations de ma base de données dans config.json.
+
+```
+{
+  "development": {
+    "username": "todolistchristmas",
+    "password": "lavieestbelle",
+    "database": "todolistchristmas_development",
+    "host": "127.0.0.1",
+    "dialect": "postgres",
+    "operatorsAliases": false
+  },
+  "test": {
+    "username": "todolistchristmas",
+    "password": "lavieestbelle",
+    "database": "todolistchristmas_test",
+    "host": "127.0.0.1",
+    "dialect": "postgres",
+    "operatorsAliases": false
+  },
+  "production": {
+    "username": "todolistchristmas",
+    "password": "lavieestbelle",
+    "database": "todolistchristmas_production",
+    "host": "127.0.0.1",
+    "dialect": "postgres",
+    "operatorsAliases": false
+  }
+}
+```
+
+## Mettre à jour app.js et vérifier la connexion.
+
+dans app.js
+
+`const Sequelize = require("sequelize");`
+
+puis pour contrôler la connexion avec la base de donnée.
+
+```
+const db = new Sequelize(
+  "todolistchristmas",
+  "todolistchristmas",
+  "lavieestbelle",
+  {
+    host: "localhost",
+    dialect: "postgres"
+  }
+);
+
+db.authenticate()
+  .then(() => {
+    console.log("Connection has been established successfully.");
+  })
+  .catch(err => {
+    console.error("Unable to connect to the database:", err);
+  });
+```
