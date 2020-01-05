@@ -280,10 +280,12 @@ db.authenticate()
   });
 ```
 
-## Générer des modèles.
+## Générer des modèles et leur migration vers la base de données.
 
-Dans "Todo" il peux y avoir plusieurs "TodoItems", à l'inverse, un "TodoItem" est rattaché à un seul "Todo".
+Les modèles représentent la base de données. Dans "Todo" il peux y avoir plusieurs "TodoItems", à l'inverse, un "TodoItem" est rattaché à un seul "Todo".
 On appelle cette relation One-to-Many.
+
+![uml-todolist](./images/uml-todolist.png)
 
 dans le terminal
 
@@ -318,13 +320,13 @@ title: {
 et dans la fonction `Todo.associate = function(models) {`
 
 ```
-TodoItem.belongsTo(models.Todo, {
+Todo.hasMany(models.TodoItem, {
       foreignKey: "todoId",
-      onDelete: "CASCADE"
+      as: "todoItems"
     });
   };
 
-  return TodoItem;
+  return Todo;
 ```
 
 puis dans todoitem.js
@@ -349,13 +351,13 @@ complete: {
 et dans la fonction `TodoItem.associate = function(models) {}`
 
 ```
-Todo.hasMany(models.TodoItem, {
+TodoItem.belongsTo(models.Todo, {
       foreignKey: 'todoId',
-      as: 'todoItems',
+      onDelete: 'CASCADE',
     });
   };
 
-  return Todo;
+  return TodoItem;
 ```
 
 dans la migration de TodoItem, ajouter aussi la relation car sequelize n'a pas crée de todoId.
@@ -369,4 +371,69 @@ todoId: {
           key: 'id',
           as: 'todoId',
         },
+```
+
+## Créer des controleurs **"controllers"** et route **"routing"**.
+
+Ils vont servir à créer, éditer, actualiser et supprimer les todos et items.
+
+créer un dossier :
+`mkdir controllers`
+créer dans "controllers" un fichier **todos.js** indiquer la route handler Express vers le modèle correspondant.
+
+```
+const Todo = require('../models').Todo;
+
+module.exports = {
+  create(req, res) { // route handler
+    return Todo
+      .create({
+        title: req.body.title,
+      })
+      .then(todo => res.status(201).send(todo))
+      .catch(error => res.status(400).send(error));
+  },
+};
+```
+
+Dans "controllers" créer un fichier **index.js** pour gérer tous les exports tous les exports
+
+```
+const todos = require("./todos");
+
+module.exports = {
+  todos
+};
+```
+
+Créer un dossier :
+`mkdir routes` et et son fichier index.js puis dans celui-ci coder les routes **app.get** et **app.post** :
+
+```
+const todosController = require("../controllers").todos;
+
+module.exports = app => {
+  app.get("/api", (req, res) =>
+    res.status(200).send({
+      message: "Welcome to the Todos API!"
+    })
+  );
+
+  app.post("/api/todos", todosController.create);
+};
+```
+
+dans app.js, il faudra aussi indiquer ces routes avec un "require" juste avant la fonction.
+
+```
+// Require our routes into the application.
+require("./routes")(app);
+// Setup a default catch-all route that sends back a welcome message in JSON format.
+app.get("*", (req, res) =>
+  res.status(200).send({
+    message: "Welcome to the beginning of nothingness."
+  })
+);
+
+module.exports = app;
 ```
