@@ -12,11 +12,11 @@ module.exports = (sequelize, DataTypes) => {
   });
   TodoItem.associate = function(models) {
     // associations bas been defined here
-    Todo.hasMany(models.TodoItem, {
+    TodoItem.belongsTo(models.Todo, {
       foreignKey: "todoId",
-      as: "todoItems"
+      onDelete: "CASCADE"
     });
   };
 
-  return Todo;
+  return TodoItem;
 };

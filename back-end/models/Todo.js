@@ -6,15 +6,13 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     }
   });
-  Todo.associate = function(models) {
-    // associations can be defined here
-    TodoItem.belongsTo(models.Todo, {
+
+  Todo.associate = models => {
+    Todo.hasMany(models.TodoItem, {
       foreignKey: "todoId",
-      onDelete: "CASCADE"
-      // tells Postgres that if we delete a todo, it's associated todo items should
-      // be deleted as well (cascade the delete action).
+      as: "todoItems"
     });
   };
 
-  return TodoItem;
+  return Todo;
 };
