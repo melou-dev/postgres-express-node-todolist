@@ -548,3 +548,40 @@ sans oublier la route dans routes/index.js
 `app.get('/api/todos/:todoId', todosController.retrieve);`
 
 Puis regarder dans Postman **get** "localhost:4000/api/todos/1"
+
+### Mettre à jour la todo.
+
+dans controllers/todos.js ajouter la methode **update**
+
+```
+update(req, res) {
+  return Todo
+    .findById(req.params.todoId, {
+      include: [{
+        model: TodoItem,
+        as: 'todoItems',
+      }],
+    })
+    .then(todo => {
+      if (!todo) {
+        return res.status(404).send({
+          message: 'Todo Not Found',
+        });
+      }
+      return todo
+        .update({
+          title: req.body.title || todo.title,
+        })
+        .then(() => res.status(200).send(todo))  // Send back the updated todo.
+        .catch((error) => res.status(400).send(error));
+    })
+    .catch((error) => res.status(400).send(error));
+},
+```
+
+sans oublier la route dans routes/index.js
+`app.put("/api/todos/:todoId", todosController.update);`
+
+Puis tester dans postman
+
+![Postman put todo update](./images/Postman-update-todo.png)
