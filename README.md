@@ -377,6 +377,8 @@ todoId: {
 
 Ils vont servir à créer, éditer, actualiser et supprimer les todos et items.
 
+### Créer pour la todo.
+
 créer un dossier :
 `mkdir controllers`
 créer dans "controllers" un fichier **todos.js** indiquer la route handler Express vers le modèle correspondant.
@@ -437,3 +439,19 @@ app.get("*", (req, res) =>
 
 module.exports = app;
 ```
+
+### Lister pour la todo.
+
+Dans controllers/todos.js, ajouter la méthode **list**.
+
+```
+list(req, res) {
+  return Todo
+    .findAll()
+    .then(todos => res.status(200).send(todos))
+    .catch(error => res.status(400).send(error));
+},
+```
+
+et la route correspondante dans routes/index.js
+`app.get('/api/todos', todosController.list);`
