@@ -499,7 +499,7 @@ Contrôler la création d'items sur postman.
 
 ### lister les items.
 
-Dans controllers/todos.js, ajouter la méthode list pour lister les items.
+Dans controllers/todos.js, ajouter la méthode **list** pour lister les items.
 
 `const TodoItem = require("../models").TodoItem;`
 
@@ -516,3 +516,35 @@ list(req, res) {
     .catch(error => res.status(400).send(error));
 },
 ```
+
+puis regarder dans Postman **get** "localhost:4000/api/todos/"
+
+### Récupérer une todo.
+
+Sans controllers/todos.js, ajouter la méthode **retrieve**
+
+```
+retrieve(req, res) {
+  return Todo
+    .findByPk(req.params.todoId, {
+      include: [{
+        model: TodoItem,
+        as: 'todoItems',
+      }],
+    })
+    .then(todo => {
+      if (!todo) {
+        return res.status(404).send({
+          message: 'Todo Not Found',
+        });
+      }
+      return res.status(200).send(todo);
+    })
+    .catch(error => res.status(400).send(error));
+},
+```
+
+sans oublier la route dans routes/index.js
+`app.get('/api/todos/:todoId', todosController.retrieve);`
+
+Puis regarder dans Postman **get** "localhost:4000/api/todos/1"
