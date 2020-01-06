@@ -496,3 +496,23 @@ et de créer sa route
 Contrôler la création d'items sur postman.
 
 ![postman printscreen for post items](./images/post-items-postman.png)
+
+### lister les items.
+
+Dans controllers/todos.js, ajouter la méthode list pour lister les items.
+
+`const TodoItem = require("../models").TodoItem;`
+
+```
+list(req, res) {
+  return Todo
+    .findAll({
+      include: [{
+        model: TodoItem,
+        as: 'todoItems',
+      }],
+    })
+    .then(todos => res.status(200).send(todos))
+    .catch(error => res.status(400).send(error));
+},
+```
