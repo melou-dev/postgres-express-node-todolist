@@ -585,3 +585,32 @@ sans oublier la route dans routes/index.js
 Puis tester dans postman
 
 ![Postman put todo update](./images/Postman-update-todo.png)
+
+### Supprimer une todo.
+
+dans controllers/todos.js ajouter la méthode **destroy**
+
+```
+destroy(req, res) {
+    return Todo.findByPk(req.params.todoId)
+      .then(todo => {
+        if (!todo) {
+          return res.status(400).send({
+            message: "Todo Not Found"
+          });
+        }
+        return todo
+          .destroy()
+          .then(() =>
+            res.status(200).send({ message: "Todo deleted successfully." })
+          )
+          .catch(error => res.status(400).send(error));
+      })
+      .catch(error => res.status(400).send(error));
+  }
+```
+
+sans oublier la route `app.delete("/api/todos/:todoId", todosController.destroy);`
+
+Vérifier dans Postman **Delete** "localhost:4000/api/todos/4".
+La todo 4 est supprimé et le message "Todo deleted successfully." apparaît.
