@@ -614,3 +614,80 @@ sans oublier la route `app.delete("/api/todos/:todoId", todosController.destroy)
 
 Vérifier dans Postman **Delete** "localhost:4000/api/todos/4".
 La todo 4 est supprimé et le message "Todo deleted successfully." apparaît.
+
+### modifier et supprimer un item.
+
+dans controller/todoItems.js
+
+```
+update(req, res) {
+    return TodoItem.findOne({
+      where: {
+        id: req.params.todoItemId,
+        todoId: req.params.todoId
+      }
+    })
+      .then(todoItem => {
+        if (!todoItem) {
+          return res.status(404).send({
+            message: "TodoItem Not Found"
+          });
+        }
+
+        return todoItem
+          .update({
+            content: req.body.content || todoItem.content,
+            complete: req.body.complete || todoItem.complete
+          })
+          .then(updatedTodoItem => res.status(200).send(updatedTodoItem))
+          .catch(error => res.status(400).send(error));
+      })
+      .catch(error => res.status(400).send(error));
+  },
+  destroy(req, res) {
+    return TodoItem.findOne({
+      where: {
+        id: req.params.todoItemId,
+        todoId: req.params.todoId
+      }
+    })
+      .then(todoItem => {
+        if (!todoItem) {
+          return res.status(404).send({
+            message: "TodoItem Not Found"
+          });
+        }
+
+        return todoItem
+          .destroy()
+          .then(() => res.status(204).send())
+          .catch(error => res.status(400).send(error));
+      })
+      .catch(error => res.status(400).send(error));
+  }
+```
+
+sans oublier les routes ordonnées, les route des todos puis les routes des items.
+
+```
+app.post("/api/todos", todosController.create);
+  app.get("/api/todos", todosController.list);
+  app.get("/api/todos/:todoId", todosController.retrieve);
+  app.put("/api/todos/:todoId", todosController.update);
+  app.delete("/api/todos/:todoId", todosController.destroy);
+
+  app.post("/api/todos/:todoId/items", todoItemsController.create);
+  app.put("/api/todos/:todoId/items/:todoItemId", todoItemsController.update);
+  app.delete(
+    "/api/todos/:todoId/items/:todoItemId",
+    todoItemsController.destroy
+  );
+
+  // For any other request method on todo items, we're going to return "Method Not Allowed"
+  app.all("/api/todos/:todoId/items", (req, res) =>
+    res.status(405).send({
+      message: "Method Not Allowed"
+    })
+  );
+};
+```
