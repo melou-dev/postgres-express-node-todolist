@@ -455,3 +455,44 @@ list(req, res) {
 
 et la route correspondante dans routes/index.js
 `app.get('/api/todos', todosController.list);`
+
+### Créer controleurs et routes pour les **items**.
+
+Créer un fichier **todoItems.js** dans controllers.
+
+```
+const TodoItem = require('../models').TodoItem;
+
+module.exports = {
+  create(req, res) {
+    return TodoItem
+      .create({
+        content: req.body.content,
+        todoId: req.params.todoId,
+      })
+      .then(todoItem => res.status(201).send(todoItem))
+      .catch(error => res.status(400).send(error));
+  },
+};
+```
+
+sans oublier de l'enregistrer dans controllers/index.js
+
+```
+const todoItems = require('./todoitems');
+
+module.exports = {
+  todos,
+  todoItems,
+};
+```
+
+et de créer sa route
+
+`const todoItemsController = require("../controllers").todoItems;`
+
+`app.post("/api/todos/:todoId/items", todoItemsController.create);`
+
+Contrôler la création d'items sur postman.
+
+![postman printscreen for post items](./images/post-items-postman.png)
