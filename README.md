@@ -13,7 +13,7 @@ Merci jmuturi, LaminEvra et Hachemi my coach.
 mkdir postgres-express-node-todolist
 `git init` qui initialise le versionning
 
-Créatio de 2 dossiers pour séparer le front du back.
+Création de 2 dossiers pour séparer le front du back.
 
 ```
 cd postgres-express-node-todolist
