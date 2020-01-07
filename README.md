@@ -97,6 +97,8 @@ _.sln
 
 `node_modules/` qui sera alors ignoré par git.
 
+## LE BACK-------------------------------------------------------------------------------------
+
 ### Initialisation d'Express et middleware Morgan & body-parser.
 
 touch app.js
@@ -812,6 +814,69 @@ message: "Method Not Allowed"
 
 ```
 
-```
+## LE FRONT------------------------------------------------------------------------------------
+
+### Nettoyage du boilerplate et création du composant TodoList.
+
+supprimer **src/components/Hello.vue** et créer src/components/TodoList.vue.
+
+puis coder en 3 partie :
 
 ```
+<template>
+  <div>
+    <ul>
+      <li>Todo A</li>
+      <li>Todo B</li>
+      <li>Todo C</li>
+    </ul>
+  </div>
+</template>
+
+<script type="text/javascript">
+export default {};
+</script>
+<style></style>
+```
+
+Dans App.vue, supprimer le logo et le style.
+
+```
+<template>
+  <div id="app">
+    <router-view />
+  </div>
+</template>
+
+<script>
+export default {
+  name: "App"
+};
+</script>
+
+<style></style>
+```
+
+### Cabler le composant à l'App.vue par le router.
+
+Dans router/index.js, il faut créer l'import et supprimer la route de HelloWorld
+
+```
+import Vue from "vue";
+import Router from "vue-router";
+import TodoList from "@/components/TodoList";
+
+Vue.use(Router);
+
+export default new Router({
+  routes: [
+    {
+      path: "/",
+      name: "TodoList",
+      component: TodoList
+    }
+  ]
+});
+```
+
+### Créer le composant TodoImputText.vue.
