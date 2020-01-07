@@ -2,8 +2,11 @@
 
 Grâce à ces tutos.
 https://scotch.io/tutorials/getting-started-with-node-express-and-postgres-using-sequelize
+https://scotch.io/tutorials/build-a-to-do-app-with-vue-js-2
 https://blog.jscrambler.com/build-a-task-management-app-using-vue-js-and-a-node-js-backend/
 https://github.com/HachemiH/todo-vue-post-to-postgres
+
+Merci jmuturi, LaminEvra et Hachemi my coach.
 
 ## Initialisation du projet.
 
@@ -19,6 +22,11 @@ mkdir back-end front-end
 
 ## Initialisation du back.
 
+```
+cd postgres-express-node-todolist
+mkdir back-end
+```
+
 ### installation de node.js dans le dossier back.
 
 ```
@@ -30,20 +38,64 @@ le fichier package.json est alors créé.
 
 ### Installation d'Express
 
-```
-touch .gitignore
-code .gitignore
-```
-
-fichier qui permet de ne pas intégrer les fichiers node_modules dans les commits.
-
-Dans le fichier copier :
-`node_modules/` qui sera alors ignoré par git.
-
 puis `npm i -S express body-parser`
 **i** pour **install**
 **-S** - pour **--Save** cad sauvegarder express et body-parser dans les dépendances de package.json.
 **body-parser** pour analyser et utiliser les paramètres du frontend dans le backend.
+
+## Initialisation du front
+
+`npm install --global vue-cli`
+
+Créer dossier front en utilisant le modèle vue "webpack"
+`vue init webpack front-end`
+
+configurer puis
+`cd todo-app`
+`npm run dev`
+
+Lancer l'application sur le navigateur.
+ouvrir un autre terminal.
+
+## .gitignore
+
+Dans le projet au même niveau que le dossier front-end et back
+
+```
+
+touch .gitignore
+code .gitignore
+
+```
+
+fichier qui permet de ne pas intégrer les fichiers node_modules dans les commits.
+
+Dans le fichier ajouter, vérifier la liste suivante :
+
+```
+
+node_modules/
+
+.DS_Store
+/dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log\*
+/test/unit/coverage/
+package-lock.json
+
+# Editor directories and files
+
+.idea
+.vscode
+_.suo
+_.ntvs\*
+_.njsproj
+_.sln
+
+```
+
+`node_modules/` qui sera alors ignoré par git.
 
 ### Initialisation d'Express et middleware Morgan & body-parser.
 
@@ -54,14 +106,17 @@ dans le fichier app.js
 Création de la dépendance à l'api express
 
 ```
+
 const express = require("express");
 const logger = require("morgan");
 const bodyParser = require('body-parser');
+
 ```
 
 Mise en action des modules express à l'appel de l'url.
 
 ```
+
 const app = express();
 const port = 4000;
 
@@ -73,11 +128,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Setup a default catch-all route that sends back a welcome message in JSON format.
-app.get('*', (req, res) => res.status(200).send({
-  message: 'Welcome to the beginning of nothingness.',
+app.get('\*', (req, res) => res.status(200).send({
+message: 'Welcome to the beginning of nothingness.',
 }));
 
 app.listen(port);
+
 ```
 
 **Morgan** est un autre middleware d'enregistreur de requêtes HTTP pour Node.js, comme journal de bord automatisé.
@@ -92,6 +148,7 @@ dans app.js ajouter l'export `module.exports = app;`
 dans le fichier www.js ajouter le code :
 
 ```
+
 // This will be our application entry. We'll setup our server here.
 const http = require("http");
 const app = require("./app"); // The express app we just created
@@ -101,6 +158,7 @@ app.set("port", port);
 
 const server = http.createServer(app);
 server.listen(port);
+
 ```
 
 Puis installer Nodemon `npm i -D nodemon`
@@ -109,10 +167,12 @@ et
 dans package.json
 
 ```
+
 "scripts": {
-    "start:dev": "nodemon ./bin/www",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+"start:dev": "nodemon ./bin/www",
+"test": "echo \"Error: no test specified\" && exit 1"
+},
+
 ```
 
 et exécuter avec la commande `npm run start:dev`. comme dans le script de package.json.
@@ -127,14 +187,16 @@ Créer un fichier `.sequelizerc`
 dans le fichier, indiquer les chemins
 
 ```
+
 const path = require('path');
 
 module.exports = {
-  "config": path.resolve('./config', 'config.json'),
-  "models-path": path.resolve('./models'),
-  "seeders-path": path.resolve('./seeders'),
-  "migrations-path": path.resolve('./migrations')
+"config": path.resolve('./config', 'config.json'),
+"models-path": path.resolve('./models'),
+"seeders-path": path.resolve('./seeders'),
+"migrations-path": path.resolve('./migrations')
 };
+
 ```
 
 Le fichier **config.json** contiendra les paramètres de configuration d'application,
@@ -152,30 +214,40 @@ Les dossiers et fichier sont alors créés.
 Dans le terminal :
 
 ```
+
 pgcli
 \l
+
 ```
 
 ```
+
 CREATE USER todolistchristmas;
 \du
+
 ```
 
 ```
+
 CREATE DATABASE todolchristmas;
 \l
+
 ```
 
 ```
+
 ALTER DATABASE todolistchristmas OWNER TO todolistchristmas;
 
 ALTER USER todolistchristmas WITH PASSWORD 'lavieestbelle';
 \q
+
 ```
 
 ```
+
 pgcli -U todolistchristmas;
 \conninfo
+
 ```
 
 ### Création d'une table.
@@ -183,9 +255,11 @@ pgcli -U todolistchristmas;
 dans le terminal dans la base de données **todolistchristmas** :
 
 ```
+
 CREATE TABLE Items (
- id bigserial not null primary key,
- item varchar(200));
+id bigserial not null primary key,
+item varchar(200));
+
 ```
 
 `select * from "items";`
@@ -201,21 +275,25 @@ la table items sous Id, la valeur 1 s'est créé, sous item la valeur bonjour.
 ### ajouter des colonnes.
 
 ```
+
 ALTER TABLE items ADD COLUMN "createdAt" timestamp;
 You're about to run a destructive command.
 Do you want to proceed? (y/n): y
 Your call!
 ALTER TABLE
 Time: 0.008s
+
 ```
 
 ```
+
 ALTER TABLE items ADD COLUMN "updatedAt" timestamp;
 You're about to run a destructive command.
 Do you want to proceed? (y/n): y
 Your call!
 ALTER TABLE
 Time: 0.004s
+
 ```
 
 `select * from "items";`
@@ -224,32 +302,34 @@ la table items sous Id, la valeur 1 s'est créé, sous item la valeur bonjour.
 ## Mettre à jour les informations de ma base de données dans config.json.
 
 ```
+
 {
-  "development": {
-    "username": "todolistchristmas",
-    "password": "lavieestbelle",
-    "database": "todolistchristmas",
-    "host": "127.0.0.1",
-    "dialect": "postgres",
-    "operatorsAliases": false
-  },
-  "test": {
-    "username": "todolistchristmas",
-    "password": "lavieestbelle",
-    "database": "todolistchristmas",
-    "host": "127.0.0.1",
-    "dialect": "postgres",
-    "operatorsAliases": false
-  },
-  "production": {
-    "username": "todolistchristmas",
-    "password": "lavieestbelle",
-    "database": "todolistchristmas",
-    "host": "127.0.0.1",
-    "dialect": "postgres",
-    "operatorsAliases": false
-  }
+"development": {
+"username": "todolistchristmas",
+"password": "lavieestbelle",
+"database": "todolistchristmas",
+"host": "127.0.0.1",
+"dialect": "postgres",
+"operatorsAliases": false
+},
+"test": {
+"username": "todolistchristmas",
+"password": "lavieestbelle",
+"database": "todolistchristmas",
+"host": "127.0.0.1",
+"dialect": "postgres",
+"operatorsAliases": false
+},
+"production": {
+"username": "todolistchristmas",
+"password": "lavieestbelle",
+"database": "todolistchristmas",
+"host": "127.0.0.1",
+"dialect": "postgres",
+"operatorsAliases": false
 }
+}
+
 ```
 
 ## Mettre à jour app.js et vérifier la connexion.
@@ -261,23 +341,25 @@ dans app.js
 puis pour contrôler la connexion avec la base de donnée.
 
 ```
+
 const db = new Sequelize(
-  "todolistchristmas",
-  "todolistchristmas",
-  "lavieestbelle",
-  {
-    host: "localhost",
-    dialect: "postgres"
-  }
+"todolistchristmas",
+"todolistchristmas",
+"lavieestbelle",
+{
+host: "localhost",
+dialect: "postgres"
+}
 );
 
 db.authenticate()
-  .then(() => {
-    console.log("Connection has been established successfully.");
-  })
-  .catch(err => {
-    console.error("Unable to connect to the database:", err);
-  });
+.then(() => {
+console.log("Connection has been established successfully.");
+})
+.catch(err => {
+console.error("Unable to connect to the database:", err);
+});
+
 ```
 
 ## Générer des modèles et leur migration vers la base de données.
@@ -308,11 +390,13 @@ dans la fonction `const Todo = sequelize.define("Todo", {}`
 pour indiquer qu'une valeur dans "title" est obligatoire
 
 ```
+
 title: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-  });
+type: DataTypes.STRING,
+allowNull: false,
+},
+});
+
 ```
 
 `allowNull: false` à rajouter aussi dans la migration.
@@ -320,13 +404,15 @@ title: {
 et dans la fonction `Todo.associate = function(models) {`
 
 ```
-Todo.hasMany(models.TodoItem, {
-      foreignKey: "todoId",
-      as: "todoItems"
-    });
-  };
 
-  return Todo;
+Todo.hasMany(models.TodoItem, {
+foreignKey: "todoId",
+as: "todoItems"
+});
+};
+
+return Todo;
+
 ```
 
 puis dans todoitem.js
@@ -335,15 +421,17 @@ dans la fonction `const TodoItem = sequelize.define("TodoItem", {}`
 pour indiquer qu'une valeur dans "content" est obligatoire et "complete" aura une valeur par défault.
 
 ```
+
 content: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
+type: DataTypes.STRING,
+allowNull: false,
+},
 complete: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-    },
-  });
+type: DataTypes.BOOLEAN,
+defaultValue: false,
+},
+});
+
 ```
 
 `allowNull : false` et `defaultValue: false` à rajouter aussi dans la migration.
@@ -351,26 +439,30 @@ complete: {
 et dans la fonction `TodoItem.associate = function(models) {}`
 
 ```
-TodoItem.belongsTo(models.Todo, {
-      foreignKey: 'todoId',
-      onDelete: 'CASCADE',
-    });
-  };
 
-  return TodoItem;
+TodoItem.belongsTo(models.Todo, {
+foreignKey: 'todoId',
+onDelete: 'CASCADE',
+});
+};
+
+return TodoItem;
+
 ```
 
 dans la migration de TodoItem, ajouter aussi la relation car sequelize n'a pas crée de todoId.
 
 ```
+
 todoId: {
-        type: Sequelize.INTEGER,
-        onDelete: 'CASCADE',
-        references: {
-          model: 'Todos',
-          key: 'id',
-          as: 'todoId',
-        },
+type: Sequelize.INTEGER,
+onDelete: 'CASCADE',
+references: {
+model: 'Todos',
+key: 'id',
+as: 'todoId',
+},
+
 ```
 
 ## Créer des controleurs **"controllers"** et route **"routing"**.
@@ -384,60 +476,68 @@ créer un dossier :
 créer dans "controllers" un fichier **todos.js** indiquer la route handler Express vers le modèle correspondant.
 
 ```
+
 const Todo = require('../models').Todo;
 
 module.exports = {
-  create(req, res) { // route handler
-    return Todo
-      .create({
-        title: req.body.title,
-      })
-      .then(todo => res.status(201).send(todo))
-      .catch(error => res.status(400).send(error));
-  },
+create(req, res) { // route handler
+return Todo
+.create({
+title: req.body.title,
+})
+.then(todo => res.status(201).send(todo))
+.catch(error => res.status(400).send(error));
+},
 };
+
 ```
 
 Dans "controllers" créer un fichier **index.js** pour gérer tous les exports tous les exports
 
 ```
+
 const todos = require("./todos");
 
 module.exports = {
-  todos
+todos
 };
+
 ```
 
 Créer un dossier :
 `mkdir routes` et et son fichier index.js puis dans celui-ci coder les routes **app.get** et **app.post** :
 
 ```
+
 const todosController = require("../controllers").todos;
 
 module.exports = app => {
-  app.get("/api", (req, res) =>
-    res.status(200).send({
-      message: "Welcome to the Todos API!"
-    })
-  );
+app.get("/api", (req, res) =>
+res.status(200).send({
+message: "Welcome to the Todos API!"
+})
+);
 
-  app.post("/api/todos", todosController.create);
+app.post("/api/todos", todosController.create);
 };
+
 ```
 
 dans app.js, il faudra aussi indiquer ces routes avec un "require" juste avant la fonction.
 
 ```
+
 // Require our routes into the application.
 require("./routes")(app);
 // Setup a default catch-all route that sends back a welcome message in JSON format.
-app.get("*", (req, res) =>
-  res.status(200).send({
-    message: "Welcome to the beginning of nothingness."
-  })
+app.get("\*", (req, res) =>
+res.status(200).send({
+message: "Welcome to the beginning of nothingness."
+})
 );
 
 module.exports = app;
+
 ```
 
 ### Lister pour la todo.
@@ -445,12 +545,14 @@ module.exports = app;
 Dans controllers/todos.js, ajouter la méthode **list**.
 
 ```
+
 list(req, res) {
-  return Todo
-    .findAll()
-    .then(todos => res.status(200).send(todos))
-    .catch(error => res.status(400).send(error));
+return Todo
+.findAll()
+.then(todos => res.status(200).send(todos))
+.catch(error => res.status(400).send(error));
 },
+
 ```
 
 et la route correspondante dans routes/index.js
@@ -461,30 +563,34 @@ et la route correspondante dans routes/index.js
 Créer un fichier **todoItems.js** dans controllers.
 
 ```
+
 const TodoItem = require('../models').TodoItem;
 
 module.exports = {
-  create(req, res) {
-    return TodoItem
-      .create({
-        content: req.body.content,
-        todoId: req.params.todoId,
-      })
-      .then(todoItem => res.status(201).send(todoItem))
-      .catch(error => res.status(400).send(error));
-  },
+create(req, res) {
+return TodoItem
+.create({
+content: req.body.content,
+todoId: req.params.todoId,
+})
+.then(todoItem => res.status(201).send(todoItem))
+.catch(error => res.status(400).send(error));
+},
 };
+
 ```
 
 sans oublier de l'enregistrer dans controllers/index.js
 
 ```
+
 const todoItems = require('./todoitems');
 
 module.exports = {
-  todos,
-  todoItems,
+todos,
+todoItems,
 };
+
 ```
 
 et de créer sa route
@@ -504,17 +610,19 @@ Dans controllers/todos.js, ajouter la méthode **list** pour lister les items.
 `const TodoItem = require("../models").TodoItem;`
 
 ```
+
 list(req, res) {
-  return Todo
-    .findAll({
-      include: [{
-        model: TodoItem,
-        as: 'todoItems',
-      }],
-    })
-    .then(todos => res.status(200).send(todos))
-    .catch(error => res.status(400).send(error));
+return Todo
+.findAll({
+include: [{
+model: TodoItem,
+as: 'todoItems',
+}],
+})
+.then(todos => res.status(200).send(todos))
+.catch(error => res.status(400).send(error));
 },
+
 ```
 
 puis regarder dans Postman **get** "localhost:4000/api/todos/"
@@ -524,24 +632,26 @@ puis regarder dans Postman **get** "localhost:4000/api/todos/"
 Sans controllers/todos.js, ajouter la méthode **retrieve**
 
 ```
+
 retrieve(req, res) {
-  return Todo
-    .findByPk(req.params.todoId, {
-      include: [{
-        model: TodoItem,
-        as: 'todoItems',
-      }],
-    })
-    .then(todo => {
-      if (!todo) {
-        return res.status(404).send({
-          message: 'Todo Not Found',
-        });
-      }
-      return res.status(200).send(todo);
-    })
-    .catch(error => res.status(400).send(error));
+return Todo
+.findByPk(req.params.todoId, {
+include: [{
+model: TodoItem,
+as: 'todoItems',
+}],
+})
+.then(todo => {
+if (!todo) {
+return res.status(404).send({
+message: 'Todo Not Found',
+});
+}
+return res.status(200).send(todo);
+})
+.catch(error => res.status(400).send(error));
 },
+
 ```
 
 sans oublier la route dans routes/index.js
@@ -554,29 +664,31 @@ Puis regarder dans Postman **get** "localhost:4000/api/todos/1"
 dans controllers/todos.js ajouter la methode **update**
 
 ```
+
 update(req, res) {
-  return Todo
-    .findById(req.params.todoId, {
-      include: [{
-        model: TodoItem,
-        as: 'todoItems',
-      }],
-    })
-    .then(todo => {
-      if (!todo) {
-        return res.status(404).send({
-          message: 'Todo Not Found',
-        });
-      }
-      return todo
-        .update({
-          title: req.body.title || todo.title,
-        })
-        .then(() => res.status(200).send(todo))  // Send back the updated todo.
-        .catch((error) => res.status(400).send(error));
-    })
-    .catch((error) => res.status(400).send(error));
+return Todo
+.findById(req.params.todoId, {
+include: [{
+model: TodoItem,
+as: 'todoItems',
+}],
+})
+.then(todo => {
+if (!todo) {
+return res.status(404).send({
+message: 'Todo Not Found',
+});
+}
+return todo
+.update({
+title: req.body.title || todo.title,
+})
+.then(() => res.status(200).send(todo)) // Send back the updated todo.
+.catch((error) => res.status(400).send(error));
+})
+.catch((error) => res.status(400).send(error));
 },
+
 ```
 
 sans oublier la route dans routes/index.js
@@ -591,23 +703,25 @@ Puis tester dans postman
 dans controllers/todos.js ajouter la méthode **destroy**
 
 ```
+
 destroy(req, res) {
-    return Todo.findByPk(req.params.todoId)
-      .then(todo => {
-        if (!todo) {
-          return res.status(400).send({
-            message: "Todo Not Found"
-          });
-        }
-        return todo
-          .destroy()
-          .then(() =>
-            res.status(200).send({ message: "Todo deleted successfully." })
-          )
-          .catch(error => res.status(400).send(error));
-      })
-      .catch(error => res.status(400).send(error));
-  }
+return Todo.findByPk(req.params.todoId)
+.then(todo => {
+if (!todo) {
+return res.status(400).send({
+message: "Todo Not Found"
+});
+}
+return todo
+.destroy()
+.then(() =>
+res.status(200).send({ message: "Todo deleted successfully." })
+)
+.catch(error => res.status(400).send(error));
+})
+.catch(error => res.status(400).send(error));
+}
+
 ```
 
 sans oublier la route `app.delete("/api/todos/:todoId", todosController.destroy);`
@@ -620,19 +734,20 @@ La todo 4 est supprimé et le message "Todo deleted successfully." apparaît.
 dans controller/todoItems.js
 
 ```
+
 update(req, res) {
-    return TodoItem.findOne({
-      where: {
-        id: req.params.todoItemId,
-        todoId: req.params.todoId
-      }
-    })
-      .then(todoItem => {
-        if (!todoItem) {
-          return res.status(404).send({
-            message: "TodoItem Not Found"
-          });
-        }
+return TodoItem.findOne({
+where: {
+id: req.params.todoItemId,
+todoId: req.params.todoId
+}
+})
+.then(todoItem => {
+if (!todoItem) {
+return res.status(404).send({
+message: "TodoItem Not Found"
+});
+}
 
         return todoItem
           .update({
@@ -643,20 +758,21 @@ update(req, res) {
           .catch(error => res.status(400).send(error));
       })
       .catch(error => res.status(400).send(error));
-  },
-  destroy(req, res) {
-    return TodoItem.findOne({
-      where: {
-        id: req.params.todoItemId,
-        todoId: req.params.todoId
-      }
-    })
-      .then(todoItem => {
-        if (!todoItem) {
-          return res.status(404).send({
-            message: "TodoItem Not Found"
-          });
-        }
+
+},
+destroy(req, res) {
+return TodoItem.findOne({
+where: {
+id: req.params.todoItemId,
+todoId: req.params.todoId
+}
+})
+.then(todoItem => {
+if (!todoItem) {
+return res.status(404).send({
+message: "TodoItem Not Found"
+});
+}
 
         return todoItem
           .destroy()
@@ -664,30 +780,38 @@ update(req, res) {
           .catch(error => res.status(400).send(error));
       })
       .catch(error => res.status(400).send(error));
-  }
+
+}
+
 ```
 
 sans oublier les routes ordonnées, les route des todos puis les routes des items.
 
 ```
+
 app.post("/api/todos", todosController.create);
-  app.get("/api/todos", todosController.list);
-  app.get("/api/todos/:todoId", todosController.retrieve);
-  app.put("/api/todos/:todoId", todosController.update);
-  app.delete("/api/todos/:todoId", todosController.destroy);
+app.get("/api/todos", todosController.list);
+app.get("/api/todos/:todoId", todosController.retrieve);
+app.put("/api/todos/:todoId", todosController.update);
+app.delete("/api/todos/:todoId", todosController.destroy);
 
-  app.post("/api/todos/:todoId/items", todoItemsController.create);
-  app.put("/api/todos/:todoId/items/:todoItemId", todoItemsController.update);
-  app.delete(
-    "/api/todos/:todoId/items/:todoItemId",
-    todoItemsController.destroy
-  );
+app.post("/api/todos/:todoId/items", todoItemsController.create);
+app.put("/api/todos/:todoId/items/:todoItemId", todoItemsController.update);
+app.delete(
+"/api/todos/:todoId/items/:todoItemId",
+todoItemsController.destroy
+);
 
-  // For any other request method on todo items, we're going to return "Method Not Allowed"
-  app.all("/api/todos/:todoId/items", (req, res) =>
-    res.status(405).send({
-      message: "Method Not Allowed"
-    })
-  );
+// For any other request method on todo items, we're going to return "Method Not Allowed"
+app.all("/api/todos/:todoId/items", (req, res) =>
+res.status(405).send({
+message: "Method Not Allowed"
+})
+);
 };
+
+```
+
+```
+
 ```
