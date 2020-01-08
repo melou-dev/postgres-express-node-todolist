@@ -45,16 +45,38 @@ puis `npm i -S express body-parser`
 
 ## Initialisation du front
 
-`npm install --global vue-cli`
+https://medium.com/@kozyreva.hanna/vue-project-with-vue-cli3-eslint-prettier-in-vs-code-1e59d686eb93
+
+S'assurer qu'on a installé Vue CLI3
+
+Sinon
+```
+# delete old vue-cli
+npm uninstall vue-cli -g
+# install vue-cli3
+npm install -g @vue/cli
+```
 
 Créer dossier front en utilisant le modèle vue "webpack"
-`vue init webpack front-end`
+`vue create front-end`
+
+puis choisir
+> Manually select feature
+> Babel - Lint/Formatter - Router
+> ESLint + prettier
+> Lint on save
+> in Package.json
+> No pour sauvegarder cette configuration
 
 configurer puis
-`cd todo-app`
-`npm run dev`
+`cd front-end`
+`npm run server`
 
 Lancer l'application sur le navigateur.
+"  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://10.59.94.97:8080/
+"
 ouvrir un autre terminal.
 
 ## .gitignore
@@ -839,44 +861,58 @@ export default {};
 <style></style>
 ```
 
-Dans App.vue, supprimer le logo et le style.
+Nettoyer les codes qui ne sert pas dans les autres fichier aussi.
+
+
+### Cabler le composant.
+
+Dans router/index.js, il faut indique la route pour connecter à la view.
 
 ```
+import Vue from "vue";
+import VueRouter from "vue-router";
+import Home from "../views/Home.vue";
+
+Vue.use(VueRouter);
+
+const routes = [
+  {
+    path: "/",
+    name: "home",
+    component: Home
+  }
+];
+
+const router = new VueRouter({
+  mode: "history",
+  base: process.env.BASE_URL,
+  routes
+});
+
+export default router;
+
+```
+
+Dans views/Home.vue, il faut cabler avec le composant en 3 étape : un import, un export, une balise.
+```
 <template>
-  <div id="app">
-    <router-view />
+  <div class="home">
+    <TodoList msg="Welcome to Your Vue.js todo-list" />
   </div>
 </template>
 
 <script>
+// @ is an alias to /src
+import TodoList from "@/components/TodoList.vue";
+
 export default {
-  name: "App"
+  name: "home",
+  components: {
+    TodoList
+  }
 };
 </script>
-
-<style></style>
-```
-
-### Cabler le composant à l'App.vue par le router.
-
-Dans router/index.js, il faut créer l'import et supprimer la route de HelloWorld
-
-```
-import Vue from "vue";
-import Router from "vue-router";
-import TodoList from "@/components/TodoList";
-
-Vue.use(Router);
-
-export default new Router({
-  routes: [
-    {
-      path: "/",
-      name: "TodoList",
-      component: TodoList
-    }
-  ]
-});
 ```
 
 ### Créer le composant TodoImputText.vue.
+
