@@ -95,29 +95,37 @@ fichier qui permet de ne pas intégrer les fichiers node_modules dans les commit
 Dans le fichier ajouter, vérifier la liste suivante :
 
 ```
-
 node_modules/
-
+package-lock.json
+/test/unit/coverage/
 .DS_Store
 /dist/
+
+# Log files
 npm-debug.log*
 yarn-debug.log*
-yarn-error.log\*
-/test/unit/coverage/
-package-lock.json
+yarn-error.log*
+
 
 # Editor directories and files
-
 .idea
 .vscode
-_.suo
-_.ntvs\*
-_.njsproj
-_.sln
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+.DS_Store
+node_modules
+/dist
+*.sw?
+
+# local env files
+.env.local
+.env.*.local
 
 ```
 
-`node_modules/` qui sera alors ignoré par git.
+Ces dossiers et fichier seront alors ignoré par git.
 
 ## LE BACK-------------------------------------------------------------------------------------
 
@@ -915,4 +923,6 @@ export default {
 ```
 
 ### Créer le composant TodoImputText.vue.
+
+
 
