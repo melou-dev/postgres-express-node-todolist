@@ -36,14 +36,23 @@ npm init -y
 
 le fichier package.json est alors créé.
 
-### Installation d'Express
+### Installation d'Express et ses packages cors, Request, body-parser.
 
-puis `npm i -S express body-parser`
+puis `npm i -S express cors request body-parser`
 **i** pour **install**
 **-S** - pour **--Save** cad sauvegarder express et body-parser dans les dépendances de package.json.
 **body-parser** pour analyser et utiliser les paramètres du frontend dans le backend.
+**CORS** nous permettra de faire des demandes depuis notre frontend.
+Sans cela, nous rencontrerons le message d'erreur.
+
+`La politique CORS pour ce site ne permet pas l'accès depuis l'origine spécifiée.`
+
+**Request**, sert à effectuer des appels HTTP externes à l'API.
+Nous pourrions simplement utiliser le module HTTP intégré, mais ce n'est pas très convivial.
 
 ## Initialisation du front
+
+### installation de vue.
 
 https://medium.com/@kozyreva.hanna/vue-project-with-vue-cli3-eslint-prettier-in-vs-code-1e59d686eb93
 
@@ -78,6 +87,14 @@ Lancer l'application sur le navigateur.
   - Network: http://10.59.94.97:8080/
 "
 ouvrir un autre terminal.
+
+### installer Buefly et Axios.
+
+**Buefly** comme composant de la biliothèque Bulma pour styler facilement.
+**Axios** pour effectuer nos appels API vers notre serveur.
+dans le front-end :
+
+`npm install buefy axios --save`
 
 ## .gitignore
 
@@ -845,6 +862,7 @@ message: "Method Not Allowed"
 ```
 
 ## LE FRONT------------------------------------------------------------------------------------
+
 
 ### Nettoyage du boilerplate et création du composant TodoList.
 
