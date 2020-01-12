@@ -2,7 +2,7 @@ node_modules/
 package-lock.json
 /test/unit/coverage/
 .DS_Store
-/dist/
+# /dist
 
 # Log files
 npm-debug.log*
@@ -19,7 +19,6 @@ yarn-error.log*
 *.sln
 .DS_Store
 node_modules
-/dist
 *.sw?
 
 # local env files
