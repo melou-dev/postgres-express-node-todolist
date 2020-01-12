@@ -887,8 +887,16 @@ export default {};
 <style></style>
 ```
 
-Nettoyer les codes qui ne sert pas dans les autres fichier aussi.
+Nettoyer les codes qui ne sert pas dans les autres fichiers aussi.
 
+### Importer buefly de Bulma dans main.js
+
+```
+import Buefy from 'buefy';
+import 'buefy/dist/buefy.css';
+
+Vue.use(Buefy);
+```
 
 ### Cabler le composant.
 
