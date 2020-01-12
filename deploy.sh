@@ -4,6 +4,7 @@
 set -e
 
 # build
+cd front-end
 npm run build
 
 # navigate into the build output directory
