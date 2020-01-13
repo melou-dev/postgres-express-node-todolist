@@ -2,10 +2,11 @@ const express = require("express");
 const logger = require("morgan");
 const bodyParser = require("body-parser");
 const Sequelize = require("sequelize");
+const cors = require("cors");
 
 const app = express();
 
-const port = 4000;
+app.use(cors());
 
 const db = new Sequelize(
   "todolistchristmas",

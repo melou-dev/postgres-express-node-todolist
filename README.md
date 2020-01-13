@@ -50,6 +50,7 @@ Sans cela, nous rencontrerons le message d'erreur.
 **Request**, sert à effectuer des appels HTTP externes à l'API.
 Nous pourrions simplement utiliser le module HTTP intégré, mais ce n'est pas très convivial.
 
+
 ## Initialisation du front
 
 ### installation de vue.
@@ -146,7 +147,7 @@ Ces dossiers et fichier seront alors ignoré par git.
 
 ## LE BACK-------------------------------------------------------------------------------------
 
-### Initialisation d'Express et middleware Morgan & body-parser.
+### Initialisation d'Express et middleware Morgan & body-parser & cors.
 
 touch app.js
 
@@ -155,10 +156,10 @@ dans le fichier app.js
 Création de la dépendance à l'api express
 
 ```
-
 const express = require("express");
 const logger = require("morgan");
 const bodyParser = require('body-parser');
+const cors = require("cors");
 
 ```
 
@@ -167,6 +168,8 @@ Mise en action des modules express à l'appel de l'url.
 ```
 
 const app = express();
+app.use(cors());
+
 const port = 4000;
 
 // Log requests to the console.
@@ -943,6 +946,45 @@ export default {
   name: "home",
   components: {
     TodoList
+  }
+};
+</script>
+```
+### Cabler le back au front.
+
+C'est le moment d'afficher les données de la todo dans le front.
+
+dans le composant `TodoList.vue`
+
+On demande l'affichage du titre de la todo.
+```
+<template>
+  <div>
+    <div v-for="todo in todos" :key="todo.id">
+      <p>{{ todo.title }}</p>
+    </div>
+  </div>
+</template>
+```
+
+Par l'intermédiaire d'axios et cors, nous programmons le lien avec URL du back.
+Nous créons aussi les premières méthodes et prgrammons l'affichage.
+```
+import axios from "axios";
+
+export default {
+  name: "TodoList",
+  data() {
+    return { todos: [] };
+  },
+  methods: {
+    async getAllTodoTitle() {
+      const response = await axios.get("http://localhost:4000/api/todos/");
+      this.todos = response.data;
+    }
+  },
+  mounted() {
+    this.getAllTodoTitle();
   }
 };
 </script>
