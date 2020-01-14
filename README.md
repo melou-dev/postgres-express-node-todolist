@@ -657,7 +657,7 @@ Contrôler la création d'items sur postman.
 
 ### lister les items.
 
-Dans controllers/todos.js, ajouter la méthode **list** pour lister les items.
+Dans controllers/todos.js, modifier la méthode **list** pour lister les items.
 
 `const TodoItem = require("../models").TodoItem;`
 
@@ -956,13 +956,19 @@ C'est le moment d'afficher les données de la todo dans le front.
 
 dans le composant `TodoList.vue`
 
-On demande l'affichage du titre de la todo.
+On demande l'affichage du titre des todos et de leur tâches imbriquées.
 ```
 <template>
   <div>
-    <div v-for="todo in todos" :key="todo.id">
-      <p>{{ todo.title }}</p>
-    </div>
+    <ul v-for="todo in todos" :key="todo.id">
+      <li>
+        {{ todo.title }}
+        <ul v-for="todoItem in todo.todoItems" :key="todoItem.id">
+          <li>{{ todoItem.content }}</li>
+        </ul>
+      </li>
+      =============
+    </ul>
   </div>
 </template>
 ```
