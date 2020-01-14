@@ -10,19 +10,15 @@ module.exports = {
       .catch(error => res.status(400).send(error));
   },
   list(req, res) {
-    return Todo.findAll()
-      .then(todos => res.status(200).send(todos))
-      .catch(error => res.status(400).send(error));
-  },
-  list(req, res) {
-    return Todo.findAll({
-      include: [
-        {
+    return Todo
+      .findAll({
+        include: [
+          {
           model: TodoItem,
-          as: "todoItems"
+          as: 'todoItems',
         }
-      ]
-    })
+      ],
+      })
       .then(todos => res.status(200).send(todos))
       .catch(error => res.status(400).send(error));
   },
