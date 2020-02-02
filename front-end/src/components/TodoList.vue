@@ -27,9 +27,10 @@
                   />
                   <form>
                     <select
-                      ><option v-for="todo in todos" :key="todo.id">{{
-                        todo.title
-                      }}</option></select
+                      ><option>catégorie ?</option
+                      ><option v-for="todo in todos" :key="todo.id"
+                        ><br />{{ todo.title }}</option
+                      ></select
                     >
                   </form>
                   <button
@@ -54,8 +55,16 @@
                         ></label>
                       </div>
                       <i class="remove mdi mdi-close-circle-outline"></i>
-                      <ul v-for="todoItem in todo.todoItems" :key="todoItem.id">
-                        <li>{{ todoItem.content }}</li>
+                      <ul>
+                        <li
+                          v-for="todoItem in todo.todoItems"
+                          :key="todoItem.id"
+                        >
+                          {{ todoItem.content }}
+                          <i class="remove mdi mdi-close-circle-outline"></i>
+                        </li>
+
+                        ============================
                       </ul>
                     </li>
                   </ul>
@@ -66,15 +75,6 @@
         </div>
       </div>
     </div>
-    <ul v-for="todo in todos" :key="todo.id">
-      <li>
-        {{ todo.title }}
-        <ul v-for="todoItem in todo.todoItems" :key="todoItem.id">
-          <li>{{ todoItem.content }}</li>
-        </ul>
-      </li>
-      =============
-    </ul>
   </div>
 </template>
 
@@ -519,11 +519,6 @@ input[type="checkbox"] {
   height: 1.25rem;
   line-height: 20px;
   text-align: center;
-}
-
-.ml-auto,
-.list-wrapper .remove,
-.mx-auto {
   margin-left: auto !important;
 }
 
